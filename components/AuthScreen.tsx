@@ -39,7 +39,21 @@ export default function AuthScreen() {
         : await signIn(email, password);
   
       if (error) {
-        Alert.alert('Erro', error.message);
+        // Provide more specific error messages based on error code
+        let errorMessage = error.message;
+        
+        if (error.message?.includes('Invalid login credentials') || 
+            error.message?.includes('invalid_credentials')) {
+          errorMessage = 'Email ou senha inválidos. Por favor, verifique suas credenciais ou cadastre-se.';
+        } else if (error.message?.includes('User already registered')) {
+          errorMessage = 'Este email já está cadastrado. Tente fazer login ou use outro email.';
+        } else if (error.message?.includes('Password should be at least')) {
+          errorMessage = 'A senha deve ter pelo menos 6 caracteres.';
+        } else if (error.message?.includes('Invalid email')) {
+          errorMessage = 'Por favor, insira um email válido.';
+        }
+        
+        Alert.alert('Erro', errorMessage);
       } else if (isSignUp) {
         Alert.alert('Sucesso', 'Conta criada com sucesso! Faça login para continuar.');
         setIsSignUp(false);
@@ -50,7 +64,7 @@ export default function AuthScreen() {
         router.replace('/(tabs)');
       }
     } catch (error) {
-      Alert.alert('Erro', 'Ocorreu um erro inesperado');
+      Alert.alert('Erro', 'Ocorreu um erro inesperado. Verifique sua conexão e tente novamente.');
     } finally {
       setLoading(false);
     }

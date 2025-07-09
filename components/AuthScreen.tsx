@@ -28,7 +28,25 @@ export default function AuthScreen() {
 
   const handleAuth = async () => {
     if (!email || !password || (isSignUp && !name)) {
-      Alert.alert('Erro', 'Por favor, preencha todos os campos');
+      Alert.alert(
+        'Campos obrigatórios', 
+        isSignUp 
+          ? 'Por favor, preencha nome, email e senha para criar sua conta.'
+          : 'Por favor, preencha email e senha para fazer login.'
+      );
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      Alert.alert('Email inválido', 'Por favor, insira um email válido.');
+      return;
+    }
+
+    // Password length validation for sign up
+    if (isSignUp && password.length < 6) {
+      Alert.alert('Senha muito curta', 'A senha deve ter pelo menos 6 caracteres.');
       return;
     }
   
@@ -55,10 +73,21 @@ export default function AuthScreen() {
         
         Alert.alert('Erro', errorMessage);
       } else if (isSignUp) {
-        Alert.alert('Sucesso', 'Conta criada com sucesso! Faça login para continuar.');
-        setIsSignUp(false);
-        setName('');
-        setPassword('');
+        Alert.alert(
+          'Sucesso', 
+          'Conta criada com sucesso! Você será redirecionado automaticamente.',
+          [
+            {
+              text: 'OK',
+              onPress: () => {
+                // Keep the email and password for automatic sign-in
+                setIsSignUp(false);
+                setName('');
+                // Don't clear password to allow immediate login
+              }
+            }
+          ]
+        );
       } else {
         // ✅ Redireciona para a tela principal após login com sucesso
         router.replace('/(tabs)');

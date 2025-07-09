@@ -63,6 +63,9 @@ export default function AuthScreen() {
         if (error.message?.includes('Invalid login credentials') || 
             error.message?.includes('invalid_credentials')) {
           errorMessage = 'Email ou senha inválidos. Por favor, verifique suas credenciais ou cadastre-se.';
+        } else if (error.message?.includes('Email not confirmed') || 
+                   error.message?.includes('email_not_confirmed')) {
+          errorMessage = 'Email não confirmado. Por favor, verifique sua caixa de entrada (incluindo spam) e clique no link de confirmação antes de fazer login.';
         } else if (error.message?.includes('User already registered')) {
           errorMessage = 'Este email já está cadastrado. Tente fazer login ou use outro email.';
         } else if (error.message?.includes('Password should be at least')) {

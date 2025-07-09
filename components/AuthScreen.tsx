@@ -77,16 +77,17 @@ export default function AuthScreen() {
         Alert.alert('Erro', errorMessage);
       } else if (isSignUp) {
         Alert.alert(
-          'Sucesso', 
-          'Conta criada com sucesso! Você será redirecionado automaticamente.',
+          'Conta criada com sucesso!', 
+          'Um email de confirmação foi enviado para seu endereço. Por favor, verifique sua caixa de entrada (incluindo spam) e clique no link de confirmação antes de fazer login.',
           [
             {
               text: 'OK',
               onPress: () => {
-                // Keep the email and password for automatic sign-in
+                // Switch to login mode after email confirmation instructions
                 setIsSignUp(false);
                 setName('');
-                // Don't clear password to allow immediate login
+                // Clear password since user needs to confirm email first
+                setPassword('');
               }
             }
           ]

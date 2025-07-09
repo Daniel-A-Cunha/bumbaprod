@@ -63,9 +63,40 @@ export default function ProfileScreen() {
     return (
       <View style={styles.container}>
         <Header title="Perfil" showIcons={false} />
-        <View style={styles.loadingContainer}>
-          <Text style={styles.loadingText}>Carregando perfil...</Text>
-        </View>
+        {loading ? (
+          <View style={styles.loadingContainer}>
+            <Text style={styles.loadingText}>Carregando perfil...</Text>
+          </View>
+        ) : (
+          <View style={styles.loadingContainer}>
+            <Text style={styles.errorText}>
+              Perfil não encontrado. Tente fazer logout e login novamente.
+            </Text>
+            <TouchableOpacity
+              style={styles.retryButton}
+              onPress={() => {
+                Alert.alert(
+                  'Recarregar perfil',
+                  'Deseja tentar recarregar o perfil?',
+                  [
+                    { text: 'Cancelar', style: 'cancel' },
+                    { 
+                      text: 'Tentar novamente', 
+                      onPress: () => {
+                        if (user) {
+                          // Force profile refetch by signing out and back in
+                          signOut();
+                        }
+                      }
+                    }
+                  ]
+                );
+              }}
+            >
+              <Text style={styles.retryButtonText}>Tentar novamente</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     );
   }
@@ -311,6 +342,24 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto-Medium',
     fontSize: 16,
     color: NEUTRAL.mediumGray,
+  },
+  errorText: {
+    fontFamily: 'Roboto-Medium',
+    fontSize: 16,
+    color: SECONDARY_RED.main,
+    textAlign: 'center',
+    marginBottom: 16,
+  },
+  retryButton: {
+    backgroundColor: PRIMARY_BLUE.main,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+  },
+  retryButtonText: {
+    fontFamily: 'Roboto-Medium',
+    fontSize: 14,
+    color: NEUTRAL.white,
   },
   scrollContainer: {
     flex: 1,

@@ -15,6 +15,7 @@ import {
 import { NEUTRAL, PRIMARY_BLUE } from '@/utils/colors';
 import { useAuth } from '@/contexts/AuthContext';
 import { LogIn, UserPlus, Eye, EyeOff } from 'lucide-react-native';
+import { AuthError } from '@supabase/supabase-js';
 
 export default function AuthScreen() {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -57,21 +58,42 @@ export default function AuthScreen() {
         : await signIn(email, password);
   
       if (error) {
-        // Provide more specific error messages based on error code
+        // Handle specific error codes from AuthError
         let errorMessage = error.message;
         
-        if (error.message?.includes('Invalid login credentials') || 
-            error.message?.includes('invalid_credentials')) {
-          errorMessage = 'Email ou senha inválidos. Por favor, verifique suas credenciais ou cadastre-se.';
-        } else if (error.message?.includes('Email not confirmed') || 
-                   error.message?.includes('email_not_confirmed')) {
-          errorMessage = 'Email não confirmado. Por favor, verifique sua caixa de entrada (incluindo spam) e clique no link de confirmação antes de fazer login.';
-        } else if (error.message?.includes('User already registered')) {
-          errorMessage = 'Este email já está cadastrado. Tente fazer login ou use outro email.';
-        } else if (error.message?.includes('Password should be at least')) {
-          errorMessage = 'A senha deve ter pelo menos 6 caracteres.';
-        } else if (error.message?.includes('Invalid email')) {
-          errorMessage = 'Por favor, insira um email válido.';
+        switch (error.code) {
+          case 'invalid_credentials':
+            errorMessage = 'Email ou senha inválidos. Por favor, verifique suas credenciais ou cadastre-se.';
+            break;
+          case 'email_not_confirmed':
+            errorMessage = 'Email não confirmado. Por favor, verifique sua caixa de entrada (incluindo spam) e clique no link de confirmação antes de fazer login.';
+            break;
+          case 'over_email_send_rate_limit':
+            errorMessage = 'Muitas tentativas de envio de email. Por favor, aguarde alguns minutos antes de tentar novamente.';
+            break;
+          case 'user_already_exists':
+            errorMessage = 'Este email já está cadastrado. Tente fazer login ou use outro email.';
+            break;
+          case 'weak_password':
+            errorMessage = 'A senha deve ter pelo menos 6 caracteres.';
+            break;
+          case 'invalid_email':
+            errorMessage = 'Por favor, insira um email válido.';
+            break;
+          default:
+            // Fallback to checking message content for backward compatibility
+            if (error.message?.includes('Invalid login credentials')) {
+              errorMessage = 'Email ou senha inválidos. Por favor, verifique suas credenciais ou cadastre-se.';
+            } else if (error.message?.includes('Email not confirmed')) {
+              errorMessage = 'Email não confirmado. Por favor, verifique sua caixa de entrada (incluindo spam) e clique no link de confirmação antes de fazer login.';
+            } else if (error.message?.includes('User already registered')) {
+              errorMessage = 'Este email já está cadastrado. Tente fazer login ou use outro email.';
+            } else if (error.message?.includes('Password should be at least')) {
+              errorMessage = 'A senha deve ter pelo menos 6 caracteres.';
+            } else if (error.message?.includes('Invalid email')) {
+              errorMessage = 'Por favor, insira um email válido.';
+            }
+            break;
         }
         
         Alert.alert('Erro', errorMessage);

@@ -18,6 +18,7 @@ import { PRIMARY_BLUE, NEUTRAL } from '@/utils/colors';
 import type { Database } from '@/types/supabase';
 import { CirclePlus as PlusCircle } from 'lucide-react-native';
 import { supabase } from '@/lib/supabase';
+import { mockAllegories } from '@/utils/mockData';
 
 const styles = StyleSheet.create({
   container: {
@@ -267,9 +268,15 @@ export default function TasksScreen() {
         throw new Error('Usuário não autenticado');
       }
 
+      // Use the first mock allegory as a placeholder
+      const defaultAllegoryId = mockAllegories.length > 0 ? mockAllegories[0].id : null;
+      
+      if (!defaultAllegoryId) {
+        throw new Error('Nenhuma alegoria disponível para associar à tarefa');
+      }
       const { error: createError } = await createTask({
         ...newTask,
-        allegory_id: 'default', // TODO: Get from context or selection
+        allegory_id: defaultAllegoryId,
         created_by: user.id
       });
 

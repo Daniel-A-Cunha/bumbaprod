@@ -363,3 +363,151 @@ export default function TasksScreen() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  content: {
+    flex: 1,
+    flexDirection: 'row',
+    padding: 16,
+    gap: 16,
+  },
+  taskListContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    borderRadius: 12,
+    padding: 16,
+  },
+  statusTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 16,
+    color: '#333',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    marginTop: 16,
+    fontSize: 16,
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  errorText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  errorDetails: {
+    fontSize: 14,
+    textAlign: 'center',
+  },
+  addButton: {
+    position: 'absolute',
+    bottom: 24,
+    right: 24,
+    borderRadius: 28,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    elevation: 8,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4.65,
+  },
+  addButtonTextContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  addButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  modalContent: {
+    width: '100%',
+    maxWidth: 400,
+    borderRadius: 16,
+    padding: 24,
+    elevation: 8,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4.65,
+  },
+  formRow: {
+    marginBottom: 20,
+  },
+  formLabel: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 8,
+  },
+  formInput: {
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+  },
+  priorityPicker: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  priorityButton: {
+    flex: 1,
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 12,
+    alignItems: 'center',
+  },
+  priorityText: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  sectorPicker: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  sectorButton: {
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 8,
+    minWidth: 80,
+    alignItems: 'center',
+  },
+  sectorText: {
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  button: {
+    borderRadius: 8,
+    padding: 16,
+    alignItems: 'center',
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+});

@@ -340,13 +340,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
   },
   loadingText: {
     fontFamily: 'Roboto-Medium',
     fontSize: 16,
-    color: NEUTRAL.darkGray,
-    marginTop: 16,
+    color: NEUTRAL.mediumGray,
   },
   errorText: {
     fontFamily: 'Roboto-Medium',

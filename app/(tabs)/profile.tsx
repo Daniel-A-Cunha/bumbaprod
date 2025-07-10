@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Modal, TextInput, Alert } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Modal, TextInput, Alert, ActivityIndicator } from 'react-native';
 import { NEUTRAL, PRIMARY_BLUE, SECTOR_COLORS, SECONDARY_RED, SEMANTIC } from '@/utils/colors';
 import Header from '@/components/Header';
 import { useAuth } from '@/contexts/AuthContext';
 import { Bell, Camera, LogOut, QrCode, Settings, User as UserIcon, CreditCard as Edit2, Save, X, Clock, MapPin } from 'lucide-react-native';
 
 export default function ProfileScreen() {
-  const { profile, signOut, updateProfile } = useAuth();
+  const { profile, signOut, updateProfile, loading, user } = useAuth();
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [isSettingsModalVisible, setIsSettingsModalVisible] = useState(false);
   const [editedProfile, setEditedProfile] = useState({
@@ -71,6 +71,7 @@ export default function ProfileScreen() {
             </>
           ) : (
             <>
+            <>
               <Text style={styles.errorText}>
                 Perfil não encontrado. Tente fazer logout e login novamente.
               </Text>
@@ -99,7 +100,6 @@ export default function ProfileScreen() {
               </TouchableOpacity>
             </>
           )}
-        </View>
       </View>
     );
   }

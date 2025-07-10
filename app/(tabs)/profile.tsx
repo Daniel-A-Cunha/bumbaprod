@@ -71,7 +71,6 @@ export default function ProfileScreen() {
             </>
           ) : (
             <>
-            <>
               <Text style={styles.errorText}>
                 Perfil não encontrado. Tente fazer logout e login novamente.
               </Text>
@@ -100,6 +99,7 @@ export default function ProfileScreen() {
               </TouchableOpacity>
             </>
           )}
+        </View>
       </View>
     );
   }

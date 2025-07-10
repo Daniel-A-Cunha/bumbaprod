@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator
 import { useRouter } from 'expo-router';
 import { NEUTRAL, PRIMARY_BLUE, SEMANTIC } from '@/utils/colors';
 import { useAuth } from '@/contexts/AuthContext';
-import { useAllegories, useTasks, useMaterials, useAlerts } from '@/hooks/useSimport { ClipboardList, Package, Bell, User, TrendingUp, TriangleAlert as AlertTriangle } from 'lucide-react-native'-react-native';
+import { useAllegories, useTasks, useMaterials, useAlerts } from '@/hooks/useSupabaseData';
+import { ClipboardList, Package, Bell, User, TrendingUp, TriangleAlert as AlertTriangle } from 'lucide-react-native';
 
 export default function HomeScreen() {
   const router = useRouter();

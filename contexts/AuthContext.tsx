@@ -64,13 +64,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const fetchProfile = async (userId: string) => {
     try {
-      const { data, error } = await supabase
+      // First try to get the profile
+      let { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
         .single();
 
-      if (error && error.code !== 'PGRST116') {
+      // If profile doesn't exist (PGRST116 error), create it
+      if (error && error.code === 'PGRST116') {
+        console.log('Profile not found, creating new profile for user:', userId);
+        
+        // Get user data to extract name
+        const { data: { user } } = await supabase.auth.getUser();
+        const userName = user?.user_metadata?.name || user?.email || 'Usuário';
+        
+        // Create new profile
+        const { data: newProfile, error: createError } = await supabase
+          .from('profiles')
+          .insert([{
+            id: userId,
+            name: userName,
+            role: 'worker',
+            sector: 'general'
+          }])
+          .select()
+          .single();
+          
+        if (createError) {
+          console.error('Error creating profile:', createError);
+        } else {
+          setProfile(newProfile);
+        }
+      } else if (error) {
         console.error('Error fetching profile:', error);
       } else if (data) {
         setProfile(data);

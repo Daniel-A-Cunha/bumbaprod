@@ -63,40 +63,43 @@ export default function ProfileScreen() {
     return (
       <View style={styles.container}>
         <Header title="Perfil" showIcons={false} />
-        {loading ? (
-          <View style={styles.loadingContainer}>
-            <Text style={styles.loadingText}>Carregando perfil...</Text>
-          </View>
-        ) : (
-          <View style={styles.loadingContainer}>
-            <Text style={styles.errorText}>
-              Perfil não encontrado. Tente fazer logout e login novamente.
-            </Text>
-            <TouchableOpacity
-              style={styles.retryButton}
-              onPress={() => {
-                Alert.alert(
-                  'Recarregar perfil',
-                  'Deseja tentar recarregar o perfil?',
-                  [
-                    { text: 'Cancelar', style: 'cancel' },
-                    { 
-                      text: 'Tentar novamente', 
-                      onPress: () => {
-                        if (user) {
-                          // Force profile refetch by signing out and back in
-                          signOut();
+        <View style={styles.loadingContainer}>
+          {loading ? (
+            <>
+              <ActivityIndicator size="large" color={PRIMARY_BLUE.main} />
+              <Text style={styles.loadingText}>Carregando perfil...</Text>
+            </>
+          ) : (
+            <>
+              <Text style={styles.errorText}>
+                Perfil não encontrado. Tente fazer logout e login novamente.
+              </Text>
+              <TouchableOpacity
+                style={styles.retryButton}
+                onPress={() => {
+                  Alert.alert(
+                    'Recarregar perfil',
+                    'Deseja tentar recarregar o perfil?',
+                    [
+                      { text: 'Cancelar', style: 'cancel' },
+                      { 
+                        text: 'Tentar novamente', 
+                        onPress: () => {
+                          if (user) {
+                            // Force profile refetch by signing out and back in
+                            signOut();
+                          }
                         }
                       }
-                    }
-                  ]
-                );
-              }}
-            >
-              <Text style={styles.retryButtonText}>Tentar novamente</Text>
-            </TouchableOpacity>
-          </View>
-        )}
+                    ]
+                  );
+                }}
+              >
+                <Text style={styles.retryButtonText}>Tentar novamente</Text>
+              </TouchableOpacity>
+            </>
+          )}
+        </View>
       </View>
     );
   }
@@ -337,11 +340,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 20,
   },
   loadingText: {
     fontFamily: 'Roboto-Medium',
     fontSize: 16,
-    color: NEUTRAL.mediumGray,
+    color: NEUTRAL.darkGray,
+    marginTop: 16,
   },
   errorText: {
     fontFamily: 'Roboto-Medium',

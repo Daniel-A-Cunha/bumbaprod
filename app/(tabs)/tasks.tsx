@@ -183,7 +183,7 @@ export default function TasksScreen() {
         <Header title="Tarefas" />
         <View style={[styles.errorContainer, { backgroundColor: theme.background }]}>
           <Text style={[styles.errorText, { color: theme.semantic.error }]}>Erro ao carregar tarefas</Text>
-          <Text style={[styles.errorDetails, { color: theme.onSurfaceVariant }]}>tasksError}</Text>
+          <Text style={[styles.errorDetails, { color: theme.onSurfaceVariant }]}>{tasksError}</Text>
         </View>
       </View>
     );
@@ -362,3 +362,4 @@ export default function TasksScreen() {
       </Modal>
     </View>
   );
+}

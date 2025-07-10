@@ -3,10 +3,12 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Modal, Tex
 import { NEUTRAL, PRIMARY_BLUE, SECTOR_COLORS, SECONDARY_RED, SEMANTIC } from '@/utils/colors';
 import Header from '@/components/Header';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTheme } from '@/contexts/ThemeContext';
 import { Bell, Camera, LogOut, QrCode, Settings, User as UserIcon, CreditCard as Edit2, Save, X, Clock, MapPin } from 'lucide-react-native';
 
 export default function ProfileScreen() {
   const { profile, signOut, updateProfile, loading, user } = useAuth();
+  const { theme, themeMode, setThemeMode, isDark } = useTheme();
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [isSettingsModalVisible, setIsSettingsModalVisible] = useState(false);
   const [editedProfile, setEditedProfile] = useState({
@@ -191,6 +193,60 @@ export default function ProfileScreen() {
 
           <ScrollView style={styles.modalForm}>
             <Text style={styles.sectionTitle}>Notificações</Text>
+            
+            <Text style={styles.settingLabel}>Tema</Text>
+            <View style={styles.themeSelector}>
+              <TouchableOpacity
+                style={[
+                  styles.themeOption,
+                  { backgroundColor: theme.surfaceVariant },
+                  themeMode === 'light' && { backgroundColor: theme.primary.main }
+                ]}
+                onPress={() => setThemeMode('light')}
+              >
+                <Text style={[
+                  styles.themeOptionText,
+                  { color: theme.onSurfaceVariant },
+                  themeMode === 'light' && { color: theme.surface }
+                ]}>
+                  Claro
+                </Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity
+                style={[
+                  styles.themeOption,
+                  { backgroundColor: theme.surfaceVariant },
+                  themeMode === 'dark' && { backgroundColor: theme.primary.main }
+                ]}
+                onPress={() => setThemeMode('dark')}
+              >
+                <Text style={[
+                  styles.themeOptionText,
+                  { color: theme.onSurfaceVariant },
+                  themeMode === 'dark' && { color: theme.surface }
+                ]}>
+                  Escuro
+                </Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity
+                style={[
+                  styles.themeOption,
+                  { backgroundColor: theme.surfaceVariant },
+                  themeMode === 'system' && { backgroundColor: theme.primary.main }
+                ]}
+                onPress={() => setThemeMode('system')}
+              >
+                <Text style={[
+                  styles.themeOptionText,
+                  { color: theme.onSurfaceVariant },
+                  themeMode === 'system' && { color: theme.surface }
+                ]}>
+                  Sistema
+                </Text>
+              </TouchableOpacity>
+            </View>
             
             {Object.entries(notifications).map(([key, value]) => (
               <TouchableOpacity
@@ -574,6 +630,22 @@ const styles = StyleSheet.create({
   },
   sectorOptionTextSelected: {
     color: NEUTRAL.white,
+  },
+  themeSelector: {
+    flexDirection: 'row',
+    marginBottom: 24,
+    gap: 8,
+  },
+  themeOption: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  themeOptionText: {
+    fontFamily: 'Roboto-Medium',
+    fontSize: 14,
   },
   settingItem: {
     flexDirection: 'row',

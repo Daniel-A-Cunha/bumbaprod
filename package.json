@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@expo-google-fonts/roboto": "^0.2.3",
+    "@react-native-async-storage/async-storage": "^2.2.0",
     "@react-native-masked-view/masked-view": "0.3.2",
     "@react-navigation/native": "^6.1.18",
     "@supabase/supabase-js": "^2.39.3",

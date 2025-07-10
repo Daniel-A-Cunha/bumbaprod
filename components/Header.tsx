@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import { NEUTRAL, PRIMARY_BLUE } from '@/utils/colors';
+import { useTheme } from '@/contexts/ThemeContext';
 import { Bell, MessageSquare, Search } from 'lucide-react-native';
 import { currentUser } from '@/utils/mockData';
 
@@ -19,27 +19,29 @@ export default function Header({
   onChatPress,
   onNotificationPress,
 }: HeaderProps) {
+  const { theme } = useTheme();
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.surface, borderBottomColor: theme.outline }]}>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>{title}</Text>
+        <Text style={[styles.title, { color: theme.onSurface }]}>{title}</Text>
       </View>
       
       {showIcons && (
         <View style={styles.iconContainer}>
           <TouchableOpacity style={styles.iconButton} onPress={onSearchPress}>
-            <Search size={24} color={NEUTRAL.darkGray} />
+            <Search size={24} color={theme.onSurfaceVariant} />
           </TouchableOpacity>
           
           <TouchableOpacity style={styles.iconButton} onPress={onChatPress}>
-            <MessageSquare size={24} color={NEUTRAL.darkGray} />
+            <MessageSquare size={24} color={theme.onSurfaceVariant} />
           </TouchableOpacity>
           
           <TouchableOpacity style={styles.iconButton} onPress={onNotificationPress}>
-            <Bell size={24} color={NEUTRAL.darkGray} />
+            <Bell size={24} color={theme.onSurfaceVariant} />
           </TouchableOpacity>
           
-          <TouchableOpacity style={styles.avatarContainer}>
+          <TouchableOpacity style={[styles.avatarContainer, { borderColor: theme.primary.light }]}>
             <Image
               source={{ uri: currentUser.avatar }}
               style={styles.avatar}
@@ -59,9 +61,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 48,
     paddingBottom: 16,
-    backgroundColor: NEUTRAL.white,
     borderBottomWidth: 1,
-    borderBottomColor: NEUTRAL.lightGray,
   },
   titleContainer: {
     flex: 1,
@@ -69,7 +69,6 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: 'Roboto-Bold',
     fontSize: 24,
-    color: NEUTRAL.black,
   },
   iconContainer: {
     flexDirection: 'row',
@@ -84,7 +83,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     overflow: 'hidden',
     borderWidth: 2,
-    borderColor: PRIMARY_BLUE.light,
   },
   avatar: {
     width: 36,

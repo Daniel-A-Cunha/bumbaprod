@@ -1,15 +1,21 @@
 import { Tabs } from 'expo-router';
 import { View, StyleSheet } from 'react-native';
-import { NEUTRAL, PRIMARY_BLUE } from '@/utils/colors';
+import { useTheme } from '@/contexts/ThemeContext';
 import { Chrome as Home, ClipboardList, Package, Bell, User } from 'lucide-react-native';
 
 export default function TabLayout() {
+  const { theme } = useTheme();
+
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: PRIMARY_BLUE.main,
-        tabBarInactiveTintColor: NEUTRAL.mediumGray,
-        tabBarStyle: styles.tabBar,
+        tabBarActiveTintColor: theme.primary.main,
+        tabBarInactiveTintColor: theme.onSurfaceVariant,
+        tabBarStyle: [styles.tabBar, { 
+          backgroundColor: theme.surface,
+          borderTopColor: theme.outline,
+          shadowColor: theme.shadow,
+        }],
         tabBarLabelStyle: styles.tabBarLabel,
         headerShown: false,
       }}>
@@ -64,15 +70,13 @@ export default function TabLayout() {
 
 const styles = StyleSheet.create({
   tabBar: {
-    backgroundColor: NEUTRAL.white,
     elevation: 8,
-    shadowColor: NEUTRAL.black,
     shadowOpacity: 0.1,
     shadowRadius: 4,
     shadowOffset: { width: 0, height: -2 },
     height: 60,
     paddingBottom: 5,
-    borderTopWidth: 0,
+    borderTopWidth: 1,
   },
   tabBarLabel: {
     fontFamily: 'Roboto-Medium',

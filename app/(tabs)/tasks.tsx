@@ -19,181 +19,10 @@ import type { Database } from '@/types/supabase';
 import { CirclePlus as PlusCircle } from 'lucide-react-native';
 import { supabase } from '@/lib/supabase';
 import { mockAllegories } from '@/utils/mockData';
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: NEUTRAL.white,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  loadingText: {
-    fontFamily: 'Inter_500Medium',
-    fontSize: 16,
-    color: NEUTRAL.darkGray,
-    marginTop: 16,
-  },
-  errorContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
-  },
-  errorText: {
-    fontFamily: 'Inter_500Medium',
-    fontSize: 16,
-    color: NEUTRAL.red,
-    textAlign: 'center',
-  },
-  errorDetails: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: 14,
-    color: NEUTRAL.darkGray,
-    textAlign: 'center',
-    marginTop: 8,
-  },
-  content: {
-    flex: 1,
-    padding: 16,
-  },
-  taskListContainer: {
-    marginBottom: 16,
-  },
-  statusTitle: {
-    fontFamily: 'Inter_700Bold',
-    fontSize: 16,
-    color: NEUTRAL.darkGray,
-    marginBottom: 8,
-  },
-  addButton: {
-    position: 'absolute',
-    bottom: 20,
-    right: 20,
-    backgroundColor: PRIMARY_BLUE.main,
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 5,
-    shadowColor: NEUTRAL.black,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  },
-  addButtonTextContainer: {
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  addButtonText: {
-    color: NEUTRAL.white,
-    fontSize: 12,
-    fontWeight: 'bold',
-    marginTop: 4,
-  },
-  priorityPicker: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 8,
-  },
-  priorityButton: {
-    flex: 1,
-    padding: 8,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: NEUTRAL.lightGray,
-    marginHorizontal: 4,
-  },
-  prioritySelected: {
-    backgroundColor: PRIMARY_BLUE.main,
-    borderColor: PRIMARY_BLUE.main,
-  },
-  priorityText: {
-    textAlign: 'center',
-    color: NEUTRAL.darkGray,
-    fontFamily: 'Inter_500Medium',
-  },
-  priorityTextSelected: {
-    color: NEUTRAL.white,
-  },
-  sectorPicker: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'flex-start',
-    padding: 8,
-  },
-  sectorButton: {
-    padding: 8,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: NEUTRAL.lightGray,
-    margin: 4,
-  },
-  sectorSelected: {
-    backgroundColor: PRIMARY_BLUE.main,
-    borderColor: PRIMARY_BLUE.main,
-  },
-  sectorText: {
-    textAlign: 'center',
-    color: NEUTRAL.darkGray,
-    fontFamily: 'Inter_500Medium',
-  },
-  sectorTextSelected: {
-    color: NEUTRAL.white,
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    backgroundColor: NEUTRAL.white,
-    padding: 20,
-    borderRadius: 10,
-    width: '90%',
-    alignSelf: 'center',
-  },
-  formRow: {
-    marginBottom: 16,
-  },
-  formLabel: {
-    fontFamily: 'Inter_500Medium',
-    fontSize: 14,
-    color: NEUTRAL.darkGray,
-    marginBottom: 8,
-  },
-  formInput: {
-    borderWidth: 1,
-    borderColor: NEUTRAL.lightGray,
-    borderRadius: 8,
-    padding: 12,
-    fontFamily: 'Inter_400Regular',
-    fontSize: 14,
-  },
-  button: {
-    backgroundColor: PRIMARY_BLUE.main,
-    padding: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 16,
-  },
-  buttonText: {
-    color: NEUTRAL.white,
-    fontFamily: 'Inter_500Medium',
-    fontSize: 16,
-  },
-});
+import { useTheme } from '@/contexts/ThemeContext';
 
 export default function TasksScreen() {
+  const { theme, isDark } = useTheme();
   const [user, setUser] = useState<any | null>(null);
   const [loadingUser, setLoadingUser] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -268,17 +97,16 @@ export default function TasksScreen() {
         throw new Error('Usuário não autenticado');
       }
 
-      // Use the first mock allegory as a placeholder
-      const defaultAllegoryId = mockAllegories.length > 0 ? mockAllegories[0].id : null;
+      // Use a valid allegory ID from the database
+      const defaultAllegoryId = '550e8400-e29b-41d4-a716-446655440001'; // Boto Encantado
       
-      if (!defaultAllegoryId) {
-        throw new Error('Nenhuma alegoria disponível para associar à tarefa');
-      }
-      const { error: createError } = await createTask({
+      const taskData = {
         ...newTask,
         allegory_id: defaultAllegoryId,
         created_by: user.id
-      });
+      };
+
+      const { error: createError } = await createTask(taskData);
 
       if (createError) {
         throw createError;
@@ -328,11 +156,11 @@ export default function TasksScreen() {
   // Render conditions
   if (loadingUser) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
         <Header title="Tarefas" />
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={PRIMARY_BLUE.main} />
-          <Text style={styles.loadingText}>Carregando...</Text>
+        <View style={[styles.loadingContainer, { backgroundColor: theme.background }]}>
+          <ActivityIndicator size="large" color={theme.primary.main} />
+          <Text style={[styles.loadingText, { color: theme.onBackground }]}>Carregando...</Text>
         </View>
       </View>
     );
@@ -340,10 +168,10 @@ export default function TasksScreen() {
 
   if (!user) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
         <Header title="Tarefas" />
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>Você precisa estar logado para acessar esta tela</Text>
+        <View style={[styles.errorContainer, { backgroundColor: theme.background }]}>
+          <Text style={[styles.errorText, { color: theme.semantic.error }]}>Você precisa estar logado para acessar esta tela</Text>
         </View>
       </View>
     );
@@ -351,11 +179,11 @@ export default function TasksScreen() {
 
   if (tasksError) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
         <Header title="Tarefas" />
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>Erro ao carregar tarefas</Text>
-          <Text style={styles.errorDetails}>{tasksError}</Text>
+        <View style={[styles.errorContainer, { backgroundColor: theme.background }]}>
+          <Text style={[styles.errorText, { color: theme.semantic.error }]}>Erro ao carregar tarefas</Text>
+          <Text style={[styles.errorDetails, { color: theme.onSurfaceVariant }]}>tasksError}</Text>
         </View>
       </View>
     );
@@ -363,21 +191,21 @@ export default function TasksScreen() {
 
   if (tasksLoading) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
         <Header title="Tarefas" />
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={PRIMARY_BLUE.main} />
-          <Text style={styles.loadingText}>Carregando tarefas...</Text>
+        <View style={[styles.loadingContainer, { backgroundColor: theme.background }]}>
+          <ActivityIndicator size="large" color={theme.primary.main} />
+          <Text style={[styles.loadingText, { color: theme.onBackground }]}>Carregando tarefas...</Text>
         </View>
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <Header title="Tarefas" />
       
-      <View style={styles.content}>
+      <View style={[styles.content, { backgroundColor: theme.background }]}>
         {renderTaskList(todoTasks, 'Pendentes')}
         {renderTaskList(inProgressTasks, 'Em Progresso')}
         {renderTaskList(doneTasks, 'Concluídas')}
@@ -385,13 +213,13 @@ export default function TasksScreen() {
 
       {/* Botão Flutuante para Adicionar Tarefa */}
       <TouchableOpacity
-        style={styles.addButton}
+        style={[styles.addButton, { backgroundColor: theme.primary.main }]}
         onPress={() => setShowAddModal(true)}
         activeOpacity={0.8}
       >
         <View style={styles.addButtonTextContainer}>
-          <PlusCircle size={24} color={NEUTRAL.white} />
-          <Text style={styles.addButtonText}>Nova Tarefa</Text>
+          <PlusCircle size={24} color={theme.surface} />
+          <Text style={[styles.addButtonText, { color: theme.surface }]}>Nova</Text>
         </View>
       </TouchableOpacity>
 
@@ -401,21 +229,25 @@ export default function TasksScreen() {
         transparent={true}
         animationType="slide"
       >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
+        <View style={[styles.modalContainer, { backgroundColor: 'rgba(0, 0, 0, 0.5)' }]}>
+          <View style={[styles.modalContent, { backgroundColor: theme.surface }]}>
             <Text style={{ 
-              fontFamily: 'Inter_700Bold', 
+              fontFamily: 'Roboto-Bold', 
               fontSize: 20, 
-              color: NEUTRAL.darkGray,
+              color: theme.onSurface,
               marginBottom: 24 
             }}>
               Nova Tarefa
             </Text>
 
             <View style={styles.formRow}>
-              <Text style={styles.formLabel}>Título</Text>
+              <Text style={[styles.formLabel, { color: theme.onSurface }]}>Título</Text>
               <TextInput
-                style={styles.formInput}
+                style={[styles.formInput, { 
+                  backgroundColor: theme.surfaceVariant, 
+                  borderColor: theme.outline,
+                  color: theme.onSurface
+                }]}
                 value={newTask.title}
                 onChangeText={text => setNewTask(prev => ({ ...prev, title: text }))}
                 placeholder="Digite o título da tarefa"
@@ -423,9 +255,15 @@ export default function TasksScreen() {
             </View>
 
             <View style={styles.formRow}>
-              <Text style={styles.formLabel}>Descrição</Text>
+              <Text style={[styles.formLabel, { color: theme.onSurface }]}>Descrição</Text>
               <TextInput
-                style={[styles.formInput, { height: 100, textAlignVertical: 'top' }]}
+                style={[styles.formInput, { 
+                  height: 100, 
+                  textAlignVertical: 'top',
+                  backgroundColor: theme.surfaceVariant, 
+                  borderColor: theme.outline,
+                  color: theme.onSurface
+                }]}
                 value={newTask.description}
                 onChangeText={text => setNewTask(prev => ({ ...prev, description: text }))}
                 placeholder="Digite a descrição da tarefa"
@@ -434,39 +272,71 @@ export default function TasksScreen() {
             </View>
 
             <View style={styles.formRow}>
-              <Text style={styles.formLabel}>Prioridade</Text>
+              <Text style={[styles.formLabel, { color: theme.onSurface }]}>Prioridade</Text>
               <View style={styles.priorityPicker}>
                 <TouchableOpacity
-                  style={[styles.priorityButton, newTask.priority === 'low' && styles.prioritySelected]}
+                  style={[
+                    styles.priorityButton, 
+                    { borderColor: theme.outline, backgroundColor: theme.surfaceVariant },
+                    newTask.priority === 'low' && { backgroundColor: theme.primary.main, borderColor: theme.primary.main }
+                  ]}
                   onPress={() => setNewTask(prev => ({ ...prev, priority: 'low' }))}
                 >
-                  <Text style={[styles.priorityText, newTask.priority === 'low' && styles.priorityTextSelected]}>Baixa</Text>
+                  <Text style={[
+                    styles.priorityText, 
+                    { color: theme.onSurfaceVariant },
+                    newTask.priority === 'low' && { color: theme.surface }
+                  ]}>Baixa</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={[styles.priorityButton, newTask.priority === 'medium' && styles.prioritySelected]}
+                  style={[
+                    styles.priorityButton, 
+                    { borderColor: theme.outline, backgroundColor: theme.surfaceVariant },
+                    newTask.priority === 'medium' && { backgroundColor: theme.primary.main, borderColor: theme.primary.main }
+                  ]}
                   onPress={() => setNewTask(prev => ({ ...prev, priority: 'medium' }))}
                 >
-                  <Text style={[styles.priorityText, newTask.priority === 'medium' && styles.priorityTextSelected]}>Média</Text>
+                  <Text style={[
+                    styles.priorityText, 
+                    { color: theme.onSurfaceVariant },
+                    newTask.priority === 'medium' && { color: theme.surface }
+                  ]}>Média</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={[styles.priorityButton, newTask.priority === 'high' && styles.prioritySelected]}
+                  style={[
+                    styles.priorityButton, 
+                    { borderColor: theme.outline, backgroundColor: theme.surfaceVariant },
+                    newTask.priority === 'high' && { backgroundColor: theme.primary.main, borderColor: theme.primary.main }
+                  ]}
                   onPress={() => setNewTask(prev => ({ ...prev, priority: 'high' }))}
                 >
-                  <Text style={[styles.priorityText, newTask.priority === 'high' && styles.priorityTextSelected]}>Alta</Text>
+                  <Text style={[
+                    styles.priorityText, 
+                    { color: theme.onSurfaceVariant },
+                    newTask.priority === 'high' && { color: theme.surface }
+                  ]}>Alta</Text>
                 </TouchableOpacity>
               </View>
             </View>
 
             <View style={styles.formRow}>
-              <Text style={styles.formLabel}>Setor</Text>
+              <Text style={[styles.formLabel, { color: theme.onSurface }]}>Setor</Text>
               <View style={styles.sectorPicker}>
                 {['design', 'structure', 'painting', 'electrical', 'finishing', 'general'].map(sector => (
                   <TouchableOpacity
                     key={sector}
-                    style={[styles.sectorButton, newTask.sector === sector && styles.sectorSelected]}
+                    style={[
+                      styles.sectorButton, 
+                      { borderColor: theme.outline, backgroundColor: theme.surfaceVariant },
+                      newTask.sector === sector && { backgroundColor: theme.primary.main, borderColor: theme.primary.main }
+                    ]}
                     onPress={() => setNewTask(prev => ({ ...prev, sector: sector as typeof newTask.sector }))}
                   >
-                    <Text style={[styles.sectorText, newTask.sector === sector && styles.sectorTextSelected]}>
+                    <Text style={[
+                      styles.sectorText, 
+                      { color: theme.onSurfaceVariant },
+                      newTask.sector === sector && { color: theme.surface }
+                    ]}>
                       {sector.charAt(0).toUpperCase() + sector.slice(1)}
                     </Text>
                   </TouchableOpacity>
@@ -474,21 +344,21 @@ export default function TasksScreen() {
               </View>
             </View>
 
-            <View style={styles.button}>
-              <TouchableOpacity onPress={handleCreateTask}>
-                <Text style={styles.buttonText}>Criar Tarefa</Text>
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity 
+              style={[styles.button, { backgroundColor: theme.primary.main }]}
+              onPress={handleCreateTask}
+            >
+              <Text style={[styles.buttonText, { color: theme.surface }]}>Criar Tarefa</Text>
+            </TouchableOpacity>
 
             <TouchableOpacity
               style={{ marginTop: 16 }}
               onPress={() => setShowAddModal(false)}
             >
-              <Text style={{ color: NEUTRAL.darkGray }}>Cancelar</Text>
+              <Text style={{ color: theme.onSurfaceVariant }}>Cancelar</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
     </View>
   );
-}
